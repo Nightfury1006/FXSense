@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FXSense — Currency Exchange Rate Forecasting & Market Intelligence</title>
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body class="font-size-normal">
+
+  <!-- Top Navigation Header -->
+  <header class="navbar" role="banner">
+    <div class="nav-container">
+      
+      <!-- Brand & Title -->
+      <div class="brand-section">
+        <div class="brand-icon" aria-hidden="true">FX</div>
+        <div>
+          <h1 class="brand-title">FXSense</h1>
+          <p class="brand-subtitle">Currency Exchange Forecasting & Market Intelligence</p>
+        </div>
+      </div>
+
+      <!-- Controls & Accessibility Toolbar -->
+      <div class="nav-controls" role="toolbar" aria-label="Accessibility and audio settings">
+        
+        <!-- Senior Accessibility: Font Scaler -->
+        <div class="font-scaler" title="Adjust text size for easy reading">
+          <span class="scaler-label">Text Size:</span>
+          <button type="button" class="btn-scale active" data-size="normal" aria-label="Normal text size">A</button>
+          <button type="button" class="btn-scale" data-size="large" aria-label="Large text size">A+</button>
+          <button type="button" class="btn-scale" data-size="xlarge" aria-label="Extra large text size">A++</button>
+        </div>
+
+        <!-- Voice Narration Button for Senior Users -->
+        <button type="button" class="btn-audio" aria-label="Listen to forecast spoken aloud">
+          <span aria-hidden="true">🔊</span> Read Out Forecast
+        </button>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <main class="main-content" role="main">
+
+    <!-- Primary Control Panel: Pair & Horizon Selection -->
+    <section class="controls-bar" aria-label="Forecast Controls">
+      
+      <div class="selector-group">
+        <label for="pair-select" class="selector-label">Select Currency Pair:</label>
+        <select id="pair-select" class="select-pair" aria-label="Select currency pair to forecast">
+          <option value="EUR/USD">EUR/USD (Euro to US Dollar)</option>
+          <option value="GBP/USD">GBP/USD (British Pound to US Dollar)</option>
+          <option value="USD/JPY">USD/JPY (US Dollar to Japanese Yen)</option>
+          <option value="AUD/USD">AUD/USD (Australian Dollar to US Dollar)</option>
+          <option value="USD/CAD">USD/CAD (US Dollar to Canadian Dollar)</option>
+        </select>
+      </div>
+
+      <div class="selector-group">
+        <span class="selector-label">Forecast Horizon:</span>
+        <div class="horizon-buttons" role="group" aria-label="Forecast timeframe">
+          <button type="button" class="btn-horizon active" data-horizon="1">1 Day (Tomorrow)</button>
+          <button type="button" class="btn-horizon" data-horizon="5">5 Days (Next Week)</button>
+          <button type="button" class="btn-horizon" data-horizon="30">30 Days (Next Month)</button>
+        </div>
+      </div>
+
+      <button type="button" id="btn-refresh-forecast" class="btn-refresh" aria-label="Generate fresh forecast">
+        <span>🔄</span> Update Forecast
+      </button>
+
+    </section>
+
+    <!-- Forecast Hero Highlight Card (High-Visibility for All Users) -->
+    <section class="hero-card" aria-label="Forecast Summary">
+      
+      <div class="hero-header">
+        <div class="hero-pair-info">
+          <h2 class="hero-pair-symbol" id="display-pair-symbol">EUR/USD</h2>
+          <span class="hero-pair-desc">Multi-Source Adaptive Forecast</span>
+        </div>
+        <div>
+          <span id="regime-badge" class="regime-badge stable">Stable / Low-Volatility</span>
+        </div>
+      </div>
+
+      <!-- Core Numbers Grid -->
+      <div class="hero-grid">
+        
+        <!-- Current Rate -->
+        <div class="metric-box">
+          <span class="metric-label">Current Exchange Rate</span>
+          <span class="metric-value" id="current-rate-val">1.0939</span>
+          <span class="metric-sub">Today's Market Rate</span>
+        </div>
+
+        <!-- Next Forecast -->
+        <div class="metric-box highlight">
+          <span class="metric-label">Expected Next Forecast</span>
+          <span class="metric-value" id="forecast-rate-val" style="color: #15803D;">1.0956</span>
+          <span class="metric-sub text-green" id="forecast-change-val">▲ +0.15% (+0.0017)</span>
+        </div>
+
+        <!-- Confidence Level -->
+        <div class="metric-box">
+          <span class="metric-label">Model Confidence</span>
+          <span class="metric-value" id="confidence-val" style="color: #1E3A8A;">88%</span>
+          <span class="metric-sub">Validation-Weighted Ensemble</span>
+        </div>
+
+      </div>
+
+      <!-- Expected Safe Range Container -->
+      <div class="range-box" aria-label="Expected price range">
+        <div class="range-details">
+          <span class="range-title">🛡 Expected Normal Safe Range (95% Confidence Interval)</span>
+          <span class="range-values">
+            <span id="range-lower-val">1.0885</span> &nbsp;—&nbsp; <span id="range-upper-val">1.1027</span>
+          </span>
+        </div>
+        <div class="confidence-indicator">
+          <span style="font-size: 0.95rem; color: #713F12; font-weight: 600;">Regime-Calibrated Uncertainty</span>
+        </div>
+      </div>
+
+      <!-- Plain English Summary for Senior Comprehension & Voice Readout -->
+      <div class="plain-summary-box" role="region" aria-label="Plain English Summary">
+        <div>
+          <strong>Clear Market Summary:</strong>
+          <p id="plain-summary-text" style="margin-top: 4px;">
+            Loading plain English forecast explanation...
+          </p>
+        </div>
+        <button type="button" class="btn-audio" style="white-space: nowrap; flex-shrink: 0;" aria-label="Listen to explanation">
+          <span>🔊</span> Listen
+        </button>
+      </div>
+
+    </section>
+
+    <!-- Multi-Source Macro Signals Strip (Gold, Crude Oil, S&P 500) -->
+    <section class="macro-strip" aria-label="Macro Financial Drivers">
+      
+      <div class="macro-card">
+        <div>
+          <div class="macro-name">🪙 Gold (XAU/USD)</div>
+          <div class="macro-impact">Safe Haven & Currency Anchor</div>
+        </div>
+        <div>
+          <div class="macro-price" id="gold-price-val">$2,550.00</div>
+          <div id="gold-change-val" class="text-green" style="font-size: 0.95rem; font-weight: 700; text-align: right;">▲ +0.45%</div>
+        </div>
+      </div>
+
+      <div class="macro-card">
+        <div>
+          <div class="macro-name">🛢 Crude Oil (WTI)</div>
+          <div class="macro-impact">Energy & Commodity Pressure</div>
+        </div>
+        <div>
+          <div class="macro-price" id="oil-price-val">$76.20</div>
+          <div id="oil-change-val" class="text-red" style="font-size: 0.95rem; font-weight: 700; text-align: right;">▼ -0.35%</div>
+        </div>
+      </div>
+
+      <div class="macro-card">
+        <div>
+          <div class="macro-name">📈 S&P 500 (^GSPC)</div>
+          <div class="macro-impact">Global Risk Sentiment</div>
+        </div>
+        <div>
+          <div class="macro-price" id="sp500-price-val">5,620.50</div>
+          <div id="sp500-change-val" class="text-green" style="font-size: 0.95rem; font-weight: 700; text-align: right;">▲ +0.28%</div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Interactive Price & Forecast Chart -->
+    <section class="chart-card" aria-label="Price History and Forecast Chart">
+      <div class="chart-header">
+        <h3 class="chart-title">Historical Exchange Rate & Forecast Projection</h3>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <span class="legend-color" style="background-color: #1E3A8A;"></span>
+            <span>Historical Rate</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color" style="background-color: #15803D;"></span>
+            <span>Ensemble Forecast</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color" style="background-color: #FEF08A; border: 1px solid #EAB308;"></span>
+            <span>Safe Range Band</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color" style="background-color: #D97706;"></span>
+            <span>7-Day Moving Avg</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Canvas Chart Container -->
+      <div class="chart-canvas-wrapper">
+        <canvas id="main-chart-canvas"></canvas>
+      </div>
+    </section>
+
+    <!-- Simple Advice & Everyday Understanding Section -->
+    <section class="academic-card" aria-label="Simple Guidance">
+      <h3 class="academic-title">Simple Advice & Everyday Understanding</h3>
+      <p class="academic-subtitle">Practical takeaways designed to be straightforward and free of financial jargon.</p>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+        
+        <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; padding: 20px; border-radius: 10px;">
+          <h4 style="font-size: 1.2rem; color: #1E3A8A; margin-bottom: 8px;">Is it a good time to exchange?</h4>
+          <p style="color: #374151; font-size: 1.05rem;">
+            Current market signals indicate a stable environment. Prices are staying comfortably within their normal expected bounds. There is no urgent need to rush or panic about sudden extreme shifts.
+          </p>
+        </div>
+
+        <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; padding: 20px; border-radius: 10px;">
+          <h4 style="font-size: 1.2rem; color: #1E3A8A; margin-bottom: 8px;">What is protecting this forecast?</h4>
+          <p style="color: #374151; font-size: 1.05rem;">
+            Rather than guessing with a single computer formula, FXSense combines four separate statistical and deep-learning methods. It continually checks which method made the fewest mistakes in recent weeks and relies on it most.
+          </p>
+        </div>
+
+        <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; padding: 20px; border-radius: 10px;">
+          <h4 style="font-size: 1.2rem; color: #1E3A8A; margin-bottom: 8px;">Need this read out?</h4>
+          <p style="color: #374151; font-size: 1.05rem; margin-bottom: 12px;">
+            You can click the blue <strong>"Read Out Forecast"</strong> button at the top of the page anytime to hear the latest forecast spoken clearly aloud.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Model Performance & Out-of-Sample Benchmark Table -->
+    <section class="academic-card" aria-label="Model Benchmark Table">
+      <h3 class="academic-title">Model Performance & Out-of-Sample Benchmark Table</h3>
+      <p class="academic-subtitle">
+        Evaluated strictly on the held-out test partition using chronology-safe validation. Compares statistical baseline (ARIMA) with deep learning (LSTM, BiLSTM, Multivariate) and the Adaptive Ensemble.
+      </p>
+
+      <div class="table-responsive">
+        <table class="styled-table" aria-label="Model benchmark metrics">
+          <thead>
+            <tr>
+              <th>Forecasting Model</th>
+              <th>Test RMSE</th>
+              <th>Test MAE</th>
+              <th>Test MAPE</th>
+              <th>Directional Accuracy (%)</th>
+              <th>Ensemble Weight</th>
+            </tr>
+          </thead>
+          <tbody id="benchmark-table-body">
+            <!-- Dynamically populated from /api/metrics -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Chronological Validation Split Visualizer -->
+      <div style="margin-top: 28px;">
+        <h4 style="font-size: 1.15rem; color: #1E3A8A; margin-bottom: 6px;">Chronological Train / Validation / Test Partition (Leakage Prevention)</h4>
+        <p style="font-size: 0.95rem; color: var(--text-muted);">
+          Guarantees strict temporal causality. No future information is leaked into past sequences.
+        </p>
+        
+        <div class="split-timeline">
+          <div class="split-train">Training Set (70% • ~1,040 Days)</div>
+          <div class="split-val">Validation (15% • ~225 Days)</div>
+          <div class="split-test">Held-Out Test (15% • ~225 Days)</div>
+        </div>
+
+        <ul class="checklist">
+          <li><span class="check-icon">✓</span> <strong>Zero Lookahead Bias:</strong> Scalers fitted solely on the training partition.</li>
+          <li><span class="check-icon">✓</span> <strong>Adaptive Ensemble Weighting:</strong> Weights derived from validation set inverse-MSE; test set remained untouched until final evaluation.</li>
+          <li><span class="check-icon">✓</span> <strong>Stationarity & Differencing:</strong> Augmented Dickey-Fuller (ADF) differencing applied to establish stationarity for ARIMA baseline.</li>
+        </ul>
+      </div>
+
+    </section>
+
+    <!-- Interactive What-If Macro Stress Test Simulator -->
+    <section class="academic-card" aria-label="What-If Stress Test">
+      <h3 class="academic-title">Interactive What-If Macro Scenario Stress Test</h3>
+      <p class="academic-subtitle">
+        Investigates how hypothetical shocks in Gold, Crude Oil, or S&P 500 affect the exchange rate prediction via empirical cross-market sensitivity.
+      </p>
+
+      <div class="simulator-grid">
+        
+        <!-- Gold Slider -->
+        <div class="slider-group">
+          <div class="slider-label-row">
+            <span>🪙 Gold Price Shift:</span>
+            <span id="val-slider-gold" style="color: #1E3A8A;">+0.0%</span>
+          </div>
+          <input type="range" id="slider-gold" class="slider-input" min="-5.0" max="5.0" step="0.5" value="0.0" aria-label="Gold percentage change slider">
+          <span style="font-size: 0.85rem; color: var(--text-muted);">-5.0% (Bearish) to +5.0% (Bullish)</span>
+        </div>
+
+        <!-- Oil Slider -->
+        <div class="slider-group">
+          <div class="slider-label-row">
+            <span>🛢 Crude Oil Shift:</span>
+            <span id="val-slider-oil" style="color: #1E3A8A;">+0.0%</span>
+          </div>
+          <input type="range" id="slider-oil" class="slider-input" min="-5.0" max="5.0" step="0.5" value="0.0" aria-label="Crude oil percentage change slider">
+          <span style="font-size: 0.85rem; color: var(--text-muted);">-5.0% (Supply Glut) to +5.0% (Supply Squeeze)</span>
+        </div>
+
+        <!-- S&P 500 Slider -->
+        <div class="slider-group">
+          <div class="slider-label-row">
+            <span>📈 S&P 500 Shift:</span>
+            <span id="val-slider-sp500" style="color: #1E3A8A;">+0.0%</span>
+          </div>
+          <input type="range" id="slider-sp500" class="slider-input" min="-5.0" max="5.0" step="0.5" value="0.0" aria-label="S&P 500 percentage change slider">
+          <span style="font-size: 0.85rem; color: var(--text-muted);">-5.0% (Risk-Off) to +5.0% (Risk-On)</span>
+        </div>
+
+      </div>
+
+      <!-- Simulation Output Box -->
+      <div class="sim-result-box">
+        <div class="sim-result-title">⚡ Simulated Stress Test Outcome</div>
+        <div style="display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;">
+          <div class="sim-result-value" id="sim-price-val">1.0939</div>
+          <div id="sim-delta-val" class="text-green" style="font-size: 1.3rem; font-weight: 700;">+0.00% (No Change)</div>
+        </div>
+        <p id="sim-interpretation-text" style="margin-top: 10px; font-size: 1.05rem; color: #1E3A8A;">
+          Move the sliders above to simulate real-time market shocks and observe currency elasticity reactions.
+        </p>
+      </div>
+
+    </section>
+
+    <!-- Prediction History & Audit Log -->
+    <section class="academic-card" aria-label="Prediction Audit Log">
+      <h3 class="academic-title">Chronological Prediction Audit Log</h3>
+      <p class="academic-subtitle">
+        Auditable verification of the last 15 out-of-sample predictions versus realized market actuals.
+      </p>
+
+      <div class="table-responsive">
+        <table class="styled-table" aria-label="Historical prediction audit">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Actual Close</th>
+              <th>Ensemble Forecast</th>
+              <th>Prediction Error</th>
+              <th>Within Safe Range?</th>
+            </tr>
+          </thead>
+          <tbody id="audit-table-body">
+            <!-- Dynamically populated from /api/history -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Application Scripts -->
+  <script src="static/js/charts.js"></script>
+  <script src="static/js/app.js"></script>
+</body>
+</html>
